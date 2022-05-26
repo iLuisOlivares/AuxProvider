@@ -15,10 +15,19 @@ import {
   IonTextarea,
   IonSelect,
   IonSelectOption,
+  IonButton,
+  IonAlert,
 } from "@ionic/react";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Header from "../../../components/Header";
+import { auth, getStorageValue } from "../../../interface/Auth";
 
+
+interface Mensaje {
+  status: string;
+  mensaje: string
+}
 const Perfil: React.FC = () => {
   const [nombre, setNombre] = useState<string>("");
   const [apellidos, setApellidos] = useState<string>();
@@ -29,13 +38,98 @@ const Perfil: React.FC = () => {
   const [celular, setCelular] = useState<number>();
   const [foto, setFoto] = useState<string>();
   const [paginaWeb, setPweb] = useState<string>();
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [AlertMsj, setAlert] = useState<Mensaje>();
+
+  const [conectado, setConectado] = useState(() => {
+    return getStorageValue("usuario", { conectado: false, token: "", usuario_id: 1, usuario_email: "" });
+  });
+
+  useEffect(() => {
+    const bearer_token = conectado.token;
+    const url = "http://localhost:8080/api/perfil/" + conectado.usuario_id;
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json", Authorization: bearer_token
+      },
+    };
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res);
+        setApellidos(res.apellidos);
+        setCelular(res.celular);
+        setCiudad(res.ciudad)
+        setDescripcion(res.descripcion);
+        setDireccion(res.direccion);
+        setNombre(res.nombre);
+        setFoto(res.foto);
+        setPweb(res.pagina_web);
+      })
+  }, []);
+
+  const handleClick = () => {
+    const data = {
+      apellidos: apellidos,
+      celular: celular,
+      ciudad: ciudad,
+      direccion: direccion,
+      foto: foto,
+      nombre: nombre,
+      pagina_web: paginaWeb,
+      descripcion: descripcion,
+    }
+    const bearer_token = conectado.token;
+    const url = "http://localhost:8080/api/perfil/update/" + conectado.usuario_id;
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json", Authorization: bearer_token
+      },
+      body: JSON.stringify(data),
+    };
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.error) {
+          const newMSJ = {
+            status: res.error,
+            mensaje: "No Actualizado",
+          }
+          setAlert(newMSJ);
+          setShowAlert(true);
+        }
+        else {
+
+
+          const newMSJ = {
+            status: "Perfil Guardado",
+            mensaje: "Perfil ha sido actualizado correctamente",
+          }
+          setAlert(newMSJ);
+          setShowAlert(true);
+        }
+        console.log(res);
+        setApellidos(res.apellidos);
+        setCelular(res.celular);
+        setCiudad(res.ciudad)
+        setDescripcion(res.descripcion);
+        setDireccion(res.direccion);
+        setNombre(res.nombre);
+        setFoto(res.foto);
+        setPweb(res.pagina_web);
+      })
+
+  }
+
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Perfil</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <Header
+        titulo="Perfil"
+      >
+
+      </Header>
       <IonContent>
         <IonList>
           <IonItemDivider color="primary">Informacion Basica</IonItemDivider>
@@ -65,23 +159,13 @@ const Perfil: React.FC = () => {
             </IonLabel>
             <IonTextarea
               value={descripcion}
-              placeholder="Describe como eres 😃"
+              placeholder="Describe como eres "
               onIonChange={(e) => setDescripcion(e.detail.value!)}
             ></IonTextarea>
           </IonItem>
           <IonItemDivider color="primary">
             Informacion de contacto
           </IonItemDivider>
-          <IonItem>
-            <IonLabel color="primary" position="stacked">
-              Email
-            </IonLabel>
-            <IonInput
-              value={email}
-              placeholder="Ingresa tu correo electronico"
-              onIonChange={(e) => setEmail(e.detail.value!)}
-            ></IonInput>
-          </IonItem>
           <IonItem>
             <IonLabel color="primary" position="stacked">
               Numero celular
@@ -92,6 +176,24 @@ const Perfil: React.FC = () => {
               placeholder="Ingresa tu celular"
               onIonChange={(e) => setCelular(parseInt(e.detail.value!, 10))}
             ></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonLabel color="primary" position="stacked">
+              Pagina Web
+            </IonLabel>
+            <IonInput
+              value={paginaWeb}
+              placeholder="Ingresa tu pagina web"
+              onIonChange={(e) => setPweb(e.detail.value!)}
+              readonly={true}
+            ></IonInput>
+            <IonAlert
+              isOpen={showAlert}
+              onDidDismiss={() => setShowAlert(false)}
+              header={AlertMsj?.status}
+              message={AlertMsj?.mensaje}
+              buttons={['Aceptar']}
+            />
           </IonItem>
           <IonItemDivider color="primary">
             Informacion de Localizacion
@@ -117,19 +219,13 @@ const Perfil: React.FC = () => {
               <IonSelectOption value="Cartagena">Cartagena</IonSelectOption>
             </IonSelect>
           </IonItem>
-          <IonItemDivider color="primary">Otros </IonItemDivider>
-          <IonItem>
-            <IonLabel color="primary" position="stacked">
-              Pagina Web
-            </IonLabel>
-            <IonInput
-              value={paginaWeb}
-              placeholder="Ingresa tu pagina web"
-              onIonChange={(e) => setPweb(e.detail.value!)}
-              readonly={true}
-            ></IonInput>
-          </IonItem>
+          <IonItemDivider color="primary">
+          </IonItemDivider>
+          <IonButton onClick={handleClick} size="small" expand="block" slot="end">
+            Guardar
+          </IonButton>
         </IonList>
+
       </IonContent>
     </IonPage>
   );

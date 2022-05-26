@@ -7,15 +7,20 @@ import {
 } from "@ionic/react";
 import React from "react";
 
-const Header: React.FC = () => {
-  var nombre = "inicio";
+
+interface propsHeader {
+  titulo: string
+}
+
+const Header: React.FC<propsHeader> = (props: propsHeader) => {
+  var titulo = props.titulo;
   return (
     <IonHeader>
       <IonToolbar>
         <IonButtons slot="start">
           <IonMenuButton></IonMenuButton>
         </IonButtons>
-        <IonTitle>{nombre}</IonTitle>
+        <IonTitle>{titulo}</IonTitle>
       </IonToolbar>
     </IonHeader>
   );

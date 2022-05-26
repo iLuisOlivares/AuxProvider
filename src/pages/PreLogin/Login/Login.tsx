@@ -1,15 +1,22 @@
 import { Link, Redirect, Route } from "react-router-dom";
 import {
   IonButton,
+  IonCol,
   IonContent,
+  IonGrid,
   IonInput,
   IonItem,
   IonLabel,
   IonPage,
+  IonRow,
   IonText,
 } from "@ionic/react";
 import React, { useState } from "react";
 import { auth } from "../../../interface/Auth";
+import { FormLogin } from "./FormLogin";
+import Header from "../../../components/Header";
+
+import "./stylelogin.css";
 
 interface Props {
   title: string;
@@ -36,57 +43,31 @@ interface PropsLogin {
 }
 
 export const Login: React.FC<PropsLogin> = (props: PropsLogin) => {
-  const [correo, setCorreo] = useState<string>();
-  const [contrasena, setContrasena] = useState<string>();
 
-  const handleSend = async () => {
-    const data = {
-      usuario: correo,
-      clave: contrasena,
-    };
-    console.log(data);
-    // const respuestaJson = enviarData(URL_LOGIN, data);
-    props.setStorage({ conectado: true, msg: "Iniciado correctamente" });
-  };
+
   return (
     <IonPage>
-      <IonContent>
-        <form>
-          <IonItem>
-            <IonLabel position="floating">
-              Correo electronico
-              <IonText color="danger">*</IonText>
-            </IonLabel>
-            <IonInput
-              type="email"
-              name="correo"
-              required
-              value={correo}
-              onIonChange={(e) => setCorreo(e.detail.value!)}
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-            ></IonInput>
-          </IonItem>
-          <IonItem>
-            <IonLabel position="floating">
-              Contraseña
-              <IonText color="danger">*</IonText>
-            </IonLabel>
-            <IonInput
-              type="password"
-              name="clave"
-              required
-              value={contrasena}
-              onIonChange={(e) => setContrasena(e.detail.value!)}
-            ></IonInput>
-          </IonItem>
-          <IonButton onClick={handleSend}>Iniciar Sesión</IonButton>
-        </form>
-        <IonItem>
-          <IonText>
-            ¿Aun no te has registrado?
-            <Link to="/registrar">Hazlo aquí</Link>
-          </IonText>
-        </IonItem>
+      <Header
+        titulo="Inicias sesión"></Header>
+      <IonContent className="contenedor">
+        <div >
+          <FormLogin
+            setStorage={props.setStorage}
+          ></FormLogin>
+
+          <IonGrid>
+            <IonRow >
+              <IonCol className="ion-text-center"  >
+                <IonText>
+                  ¿Aun no te has registrado? {" "}
+                  <Link to="/registrar">Hazlo aquí</Link>
+                </IonText>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+
+        </div>
+
       </IonContent>
     </IonPage>
   );

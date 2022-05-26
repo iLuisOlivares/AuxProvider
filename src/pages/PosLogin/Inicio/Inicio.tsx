@@ -16,26 +16,30 @@ import {
   helpBuoyOutline,
   personOutline,
 } from "ionicons/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../../components/Header";
+import { auth } from "../../../interface/Auth";
 
 const Inicio: React.FC = () => {
+
+
   return (
     <IonPage>
-      <Header></Header>
+      <Header
+        titulo="Inicio"></Header>
       <IonContent>
         <IonGrid>
           <IonCol>
-            <IonButton color="tertiary" expand="block">
+            <IonButton color="primary" expand="block">
               <IonIcon slot="start" icon={personOutline} />
               Perfil
             </IonButton>
-            <IonButton color="tertiary" expand="block">
+            <IonButton color="primary" expand="block">
               <IonIcon slot="start" icon={constructOutline} />
               Servicios
             </IonButton>
 
-            <IonButton color="tertiary" expand="block">
+            <IonButton color="primary" expand="block">
               <IonIcon slot="start" icon={helpBuoyOutline} />
               Servicio cliente
             </IonButton>

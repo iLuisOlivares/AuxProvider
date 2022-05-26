@@ -16,6 +16,8 @@ import {
   IonButton,
   useIonActionSheet,
   IonActionSheet,
+  IonModal,
+  IonAlert,
 } from "@ionic/react";
 import {
   trash,
@@ -25,18 +27,16 @@ import {
   close,
   createOutline,
   fingerPrintOutline,
+  reorderThreeOutline,
 } from "ionicons/icons";
+import { PropsServicio } from "../data/servicios-context";
+import { ModalServicio } from "./ModalServicio";
+import { getStorageValue } from "../interface/Auth";
 
-interface PropsServicio {
-  id_servicio: number;
-  id_proveedor: number;
-  titulo: string;
-  area_servicio: string;
-  servicio_especifico: string;
-  descripcion: string;
-  precio: number;
+interface Mensaje {
+  status: string;
+  mensaje: string
 }
-
 export const CardServicio: React.FC<PropsServicio> = (props: PropsServicio) => {
   const {
     id_servicio,
@@ -46,62 +46,135 @@ export const CardServicio: React.FC<PropsServicio> = (props: PropsServicio) => {
     servicio_especifico,
     descripcion,
     precio,
+    metodo,
   } = props;
+
+
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [AlertMsj, setAlert] = useState<Mensaje>();
+
+
+  const [conectado, setConectado] = useState(() => {
+    return getStorageValue("usuario", { conectado: false, token: "", usuario_id: 1, usuario_email: "" });
+  });
+
+  const handleDelete = () => {
+    const data = {
+      id: id_servicio,
+      activo: false
+    }
+
+    const bearer_token = conectado.token;
+    const usuario_id = conectado.usuario_id;
+    const url = "http://localhost:8080/api/servicios/update/" + usuario_id;
+
+    const requestOptions = {
+
+      method: metodo,
+      headers: {
+        "Content-Type": "application/json", Authorization: bearer_token,
+      },
+      body: JSON.stringify(data),
+    };
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res);
+        if (res.error) {
+
+          const newMSJ = {
+            status: res.error,
+            mensaje: "Servicio no eliminado",
+          }
+          setAlert(newMSJ);
+          setShowAlert(true);
+        }
+        else {
+          const newMSJ = {
+            status: "Servicio eliminado",
+            mensaje: "Servicio eliminado correctamente",
+          }
+          setAlert(newMSJ);
+          setShowAlert(true);
+        }
+      });
+  }
+
+
   const [showActionSheet, setShowActionSheet] = useState(false);
-
+  const [showModal, setShowModal] = useState(false);
   return (
-    <IonCard onClick={() => setShowActionSheet(true)}>
-      <IonItem>
-        <IonButton fill="outline" slot="end">
-          actualizar
-        </IonButton>
-        <IonLabel>{titulo}</IonLabel>
-      </IonItem>
-      <IonCardHeader>
-        <IonCardSubtitle color="primary">{area_servicio}</IonCardSubtitle>
-        <IonCardTitle>{servicio_especifico}</IonCardTitle>
-        <IonCardSubtitle color="primary">
-          {" "}
-          <IonLabel color="dark">Precio: </IonLabel>
-          {precio}
-        </IonCardSubtitle>
-      </IonCardHeader>
+    <>
+      <IonCard onClick={() => setShowActionSheet(true)}>
+        <IonItem>
+          <IonIcon color="primary" slot="end" icon={reorderThreeOutline} />
+          <IonLabel>{titulo}</IonLabel>
+        </IonItem>
+        <IonCardHeader>
+          <IonCardSubtitle color="primary">{area_servicio}</IonCardSubtitle>
+          <IonCardTitle>{servicio_especifico}</IonCardTitle>
+          <IonCardSubtitle color="primary">
+            {" "}
+            <IonLabel color="dark">Precio: </IonLabel>
+            {precio}
+          </IonCardSubtitle>
+        </IonCardHeader>
+        <IonCardContent>{descripcion}</IonCardContent>
 
-      <IonCardContent>{descripcion}</IonCardContent>
-      <IonActionSheet
-        isOpen={showActionSheet}
-        onDidDismiss={() => setShowActionSheet(false)}
-        buttons={[
-          {
-            text: "Editar",
-            icon: createOutline,
-            data: 10,
-            handler: () => {
-              console.log("Share clicked");
+        <IonActionSheet
+          isOpen={showActionSheet}
+          onDidDismiss={() => {
+            setShowActionSheet(false);
+          }}
+          buttons={[
+            {
+              text: "Editar",
+              icon: createOutline,
+              handler: () => setShowModal(true),
             },
-          },
-          {
-            text: "Eliminar",
-            role: "destructive",
-            icon: trash,
-            id: "delete-button",
-            data: {
-              type: "delete",
+            {
+              text: "Eliminar",
+              role: "destructive",
+              icon: trash,
+              id: "delete-button",
+              data: {
+                type: "delete",
+              },
+              handler: () => handleDelete(),
             },
-            handler: () => {
-              console.log("Delete clicked");
+            {
+              text: "Cancel",
+              icon: close,
+              role: "cancel",
+              handler: () => {
+                console.log("Cancel clicked");
+              },
             },
-          },
-          {
-            text: "Cancel",
-            icon: close,
-            role: "cancel",
-            handler: () => {
-              console.log("Cancel clicked");
-            },
-          },
-        ]}
-      ></IonActionSheet>
-    </IonCard>
+          ]}
+        ></IonActionSheet>
+      </IonCard>
+      <IonModal isOpen={showModal}>
+        <ModalServicio
+          id_servicio={id_servicio}
+          id_proveedor={id_proveedor}
+          area_servicio={area_servicio}
+          servicio_especifico={servicio_especifico}
+          descripcion={descripcion}
+          precio={precio}
+          titulo={titulo}
+          metodo={metodo}
+        ></ModalServicio>
+        <IonButton color="danger" onClick={() => setShowModal(false)}>
+          Cerrar
+        </IonButton>
+      </IonModal>
+      <IonAlert
+        isOpen={showAlert}
+        onDidDismiss={() => setShowAlert(false)}
+        header={AlertMsj?.status}
+        message={AlertMsj?.mensaje}
+        buttons={['Aceptar']}
+      />
+    </>
   );
 };

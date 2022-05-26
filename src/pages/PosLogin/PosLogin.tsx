@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonAvatar,
@@ -27,8 +27,21 @@ interface PropsPosLogin {
   setStorage: (estado: auth) => void;
 }
 export const PosLogin: React.FC<PropsPosLogin> = (props: PropsPosLogin) => {
+
+  const [conectado, setConectado] = useState(() => {
+    return getStorageValue("usuario", { conectado: false, token: "", usuario_id: 1, usuario_email: "" });
+  });
+
+  function getStorageValue(key: string, defaultValue: auth) {
+    // getting stored value
+    const saved = localStorage.getItem(key);
+    const initial = saved != null ? JSON.parse(saved) : defaultValue;
+    console.log(initial);
+    return initial;
+  }
+
   const handleClick = () => {
-    props.setStorage({ conectado: false, msg: "Cerrado correctamente" });
+    props.setStorage({ conectado: false, usuario_id: 0, token: "", usuario_email: "" });
   };
   return (
     <IonReactRouter>
@@ -43,7 +56,7 @@ export const PosLogin: React.FC<PropsPosLogin> = (props: PropsPosLogin) => {
                   src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
                 />
               </IonAvatar>
-              <IonLabel>Nombre usuario</IonLabel>
+              <IonLabel>{conectado.usuario_id}</IonLabel>
             </IonItem>
           </IonToolbar>
         </IonHeader>
