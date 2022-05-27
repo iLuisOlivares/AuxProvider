@@ -57,7 +57,7 @@ const Tecnico: React.FC = () => {
       },
       body: JSON.stringify(data),
     };
-    fetch("http://localhost:8080/email/send", requestOptions)
+    fetch("https://aux-backend.herokuapp.com/email/send", requestOptions)
       .then((response) => response.status)
       .then((res) => {
         console.log(res);
@@ -91,7 +91,7 @@ const Tecnico: React.FC = () => {
             <IonRow>
               <IonCol>
                 <IonItemDivider color="primary">
-                  <IonText> <h3> Contactanos:  Envianos tus recomendacion, reclamos o quejas</h3></IonText>
+                  <IonText> <h3> Contactanos:  Envianos tus recomendación, reclamos o quejas</h3></IonText>
                 </IonItemDivider>
 
                 <IonItem>

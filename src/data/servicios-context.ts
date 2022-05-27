@@ -39,7 +39,7 @@ export interface PropsServicio {
   area_servicio: string;
   servicio_especifico: string;
   descripcion: string;
-  precio?: number;
+  precio: number;
   metodo: string;
 
 }
@@ -66,7 +66,7 @@ export interface InputsForm {
 }
 
 const bearer_token = "Bearer " + "acces_token";
-                    const url = "http://localhost:8080/api/proveedor/email/" ;
+                    const url = "https://aux-backend.herokuapp.com/api/proveedor/email/" ;
                     const requestOptions = {
                         method: "GET",
                         headers: {

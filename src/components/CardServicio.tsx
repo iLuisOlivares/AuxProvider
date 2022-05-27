@@ -58,7 +58,7 @@ export const CardServicio: React.FC<PropsServicio> = (props: PropsServicio) => {
 
     const bearer_token = conectado.token;
     const usuario_id = conectado.usuario_id;
-    const url = "http://localhost:8080/api/servicios/update/" + usuario_id;
+    const url = "https://aux-backend.herokuapp.com/api/servicios/update/" + usuario_id;
 
     const requestOptions = {
 
@@ -153,7 +153,7 @@ export const CardServicio: React.FC<PropsServicio> = (props: PropsServicio) => {
           area_servicio={area_servicio}
           servicio_especifico={servicio_especifico}
           descripcion={descripcion}
-          precio={0}
+          precio={precio}
           titulo={titulo}
           metodo={metodo}
         ></ModalServicio>

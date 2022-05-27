@@ -58,19 +58,18 @@ const Servicios: React.FC = () => {
           servicio.area_servicio.toUpperCase().includes(searchText.toUpperCase()) || servicio.servicio_especifico.toUpperCase().includes(searchText.toUpperCase())
           || servicio.titulo.toUpperCase().includes(searchText.toUpperCase()));
         setFilterDisplay(newList);
-        console.log(newList);
 
       } else {
         setFilterDisplay(servicios);
       }
     }
 
-  }, [servicios, searchText, count]);
+  }, [servicios, searchText]);
 
 
   useEffect(() => {
     const bearer_token = conectado.token;
-    const url = "http://localhost:8080/api/servicio/" + conectado.usuario_id;
+    const url = "https://aux-backend.herokuapp.com/api/servicio/" + conectado.usuario_id;
     const requestOptions = {
       method: "GET",
       headers: {
@@ -82,8 +81,7 @@ const Servicios: React.FC = () => {
       .then((res) => {
         if (res.error_mensaje) {
         } else {
-          setServicios(res);
-
+          setFilterDisplay(res);
         }
 
       })

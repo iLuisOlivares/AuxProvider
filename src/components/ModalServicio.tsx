@@ -35,13 +35,10 @@ export const ModalServicio: React.FC<PropsServicio> = (
   } = props;
   const [uarea_servicio, setArea] = useState<string>(area_servicio);
   const [uservicio_especifico, setServicio] = useState<string>(servicio_especifico);
-  const [areaID, setAreaID] = useState<number>(1);
-  const [servicioID, setServicioID] = useState<number>(0);
 
   const [utitulo, setTitulo] = useState<string>(titulo);
   const [udescripcion, setDescripcion] = useState<string>(descripcion);
   const [uprecio, setPrecio] = useState<number | undefined>(precio);
-  const [uid, setid] = useState<number>(id_servicio);
 
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -66,7 +63,7 @@ export const ModalServicio: React.FC<PropsServicio> = (
 
     const bearer_token = conectado.token;
     const usuario_id = conectado.usuario_id;
-    const url = "http://localhost:8080/api/servicios/update/" + usuario_id;
+    const url = "https://aux-backend.herokuapp.com/api/servicios/update/" + usuario_id;
 
     const requestOptions = {
 

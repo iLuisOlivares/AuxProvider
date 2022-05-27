@@ -42,7 +42,7 @@ const Perfil: React.FC = () => {
 
   useEffect(() => {
     const bearer_token = conectado.token;
-    const url = "http://localhost:8080/api/perfil/" + conectado.usuario_id;
+    const url = "https://aux-backend.herokuapp.com/api/perfil/" + conectado.usuario_id;
     const requestOptions = {
       method: "GET",
       headers: {
@@ -75,7 +75,7 @@ const Perfil: React.FC = () => {
       descripcion: descripcion,
     }
     const bearer_token = conectado.token;
-    const url = "http://localhost:8080/api/perfil/update/" + conectado.usuario_id;
+    const url = "https://aux-backend.herokuapp.com/api/perfil/update/" + conectado.usuario_id;
     const requestOptions = {
       method: "PUT",
       headers: {
@@ -104,7 +104,6 @@ const Perfil: React.FC = () => {
           setAlert(newMSJ);
           setShowAlert(true);
         }
-        console.log(res);
         setApellidos(res.apellidos);
         setCelular(res.celular);
         setCiudad(res.ciudad)

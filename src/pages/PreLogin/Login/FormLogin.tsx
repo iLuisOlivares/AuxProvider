@@ -46,13 +46,13 @@ export const FormLogin: React.FC<PropsLogin> = (props: PropsLogin) => {
                 },
                 body: new URLSearchParams(data),
             };
-            fetch("http://localhost:8080/api/login  ", requestOptions)
+            fetch("https://aux-backend.herokuapp.com/api/login  ", requestOptions)
                 .then((response) => response.json())
                 .then((res) => {
                     console.log(res);
                     if (res.conectado) {
                         const bearer_token = "Bearer " + res.acces_token;
-                        const url = "http://localhost:8080/api/proveedor/email/" + res.usuario_id;
+                        const url = "https://aux-backend.herokuapp.com/api/proveedor/email/" + res.usuario_id;
                         const requestOptions = {
                             method: "GET",
                             headers: {

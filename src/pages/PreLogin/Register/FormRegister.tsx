@@ -53,57 +53,68 @@ export const FormRegister = () => {
 
     const handleSubmitt = (e: { preventDefault: () => void }) => {
         e.preventDefault();
-        const data = {
-            id: numero_identificacion,
-            tipo_id: identificacion,
-            activo: true,
-            usuario: {
-                email: correo_electronico,
-                clave: contrasena,
-            },
-            perfil: {
-                apellidos: apellidos,
-                celular: celular,
-                direccion: direccion,
-                ciudad: ciudad,
-                foto: "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y",
-                nombre: nombres,
-                pagina_web: pagina_web,
-                descripcion: descripcion,
-            },
-        };
+        if (contrasena === repeat_contrasena) {
 
-        const requestOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        };
-        fetch("http://localhost:8080/api/proveedor/save", requestOptions)
-            .then((response) => response.json())
-            .then((res) => {
-                console.log(res);
-                if (res.error) {
 
-                    const newMSJ = {
-                        status: res.error,
-                        mensaje: "No registrado",
+            const data = {
+                id: numero_identificacion,
+                tipo_id: identificacion,
+                activo: true,
+                usuario: {
+                    email: correo_electronico,
+                    clave: contrasena,
+                },
+                perfil: {
+                    apellidos: apellidos,
+                    celular: celular,
+                    direccion: direccion,
+                    ciudad: ciudad,
+                    foto: "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y",
+                    nombre: nombres,
+                    pagina_web: pagina_web,
+                    descripcion: descripcion,
+                },
+            };
+
+            const requestOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+            fetch("https://aux-backend.herokuapp.com/api/proveedor/save", requestOptions)
+                .then((response) => response.json())
+                .then((res) => {
+                    if (res.status === 500) {
+
+                        const newMSJ = {
+                            status: "Proveedor ya registrado",
+                            mensaje: "Identificacion o correo electronico ya registrados",
+                        }
+                        setAlert(newMSJ);
+                        setShowAlert(true);
                     }
-                    setAlert(newMSJ);
-                    setShowAlert(true);
-                }
-                else {
-                    const newMSJ = {
-                        status: "Registrado",
-                        mensaje: "Usuario registrado correctamente",
+                    else {
+                        const newMSJ = {
+                            status: "Registrado",
+                            mensaje: "Usuario registrado correctamente",
+                        }
+                        setAlert(newMSJ);
+                        setShowAlert(true);
+                        clearForm();
                     }
-                    setAlert(newMSJ);
-                    setShowAlert(true);
-                    clearForm();
-                }
 
-            });
+                });
+        } else {
+            const newMSJ = {
+                status: "Las contraseñas no coinciden",
+                mensaje: "Verifique que las contraseñas sean iguales",
+            }
+            setAlert(newMSJ);
+            setShowAlert(true);
+
+        }
     };
 
     return (
