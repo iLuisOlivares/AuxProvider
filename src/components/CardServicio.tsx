@@ -1,10 +1,5 @@
 import React, { useState } from "react";
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
   IonCard,
   IonCardHeader,
   IonCardSubtitle,
@@ -14,19 +9,14 @@ import {
   IonIcon,
   IonLabel,
   IonButton,
-  useIonActionSheet,
   IonActionSheet,
   IonModal,
   IonAlert,
 } from "@ionic/react";
 import {
   trash,
-  share,
-  caretForwardCircle,
-  heart,
   close,
   createOutline,
-  fingerPrintOutline,
   reorderThreeOutline,
 } from "ionicons/icons";
 import { PropsServicio } from "../data/servicios-context";
@@ -63,6 +53,8 @@ export const CardServicio: React.FC<PropsServicio> = (props: PropsServicio) => {
       id: id_servicio,
       activo: false
     }
+
+    console.log(data)
 
     const bearer_token = conectado.token;
     const usuario_id = conectado.usuario_id;
@@ -155,6 +147,7 @@ export const CardServicio: React.FC<PropsServicio> = (props: PropsServicio) => {
       </IonCard>
       <IonModal isOpen={showModal}>
         <ModalServicio
+          key={id_servicio + id_proveedor}
           id_servicio={id_servicio}
           id_proveedor={id_proveedor}
           area_servicio={area_servicio}

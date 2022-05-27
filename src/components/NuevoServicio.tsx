@@ -1,9 +1,7 @@
 import {
   IonButton,
-  IonContent,
   IonGrid,
   IonIcon,
-  IonItem,
   IonModal,
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";

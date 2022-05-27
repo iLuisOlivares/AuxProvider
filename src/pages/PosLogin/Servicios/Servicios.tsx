@@ -1,16 +1,12 @@
 import {
   IonButton,
-  IonCol,
   IonContent,
-  IonGrid,
-  IonHeader,
   IonIcon,
   IonPage,
   IonSearchbar,
   IonTitle,
-  IonToolbar,
 } from "@ionic/react";
-import { addOutline } from "ionicons/icons";
+import { reloadOutline } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { CardServicio } from "../../../components/CardServicio";
 import Header from "../../../components/Header";
@@ -28,48 +24,53 @@ interface servicioInterface {
   titulo: string;
 }
 
+
 const Servicios: React.FC = () => {
   const [searchText, setSearchText] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const [servicios, setServicios] = useState<servicioInterface[] | undefined>([]);
   const [filterDisplay, setFilterDisplay] = useState<servicioInterface[] | undefined>([]);
+
+
 
   const [conectado, setConectado] = useState(() => {
     return getStorageValue("usuario", { conectado: false, token: "", usuario_id: 1, usuario_email: "" });
   });
 
+  const [count, setCount] = useState<number>(0);
+
 
   useEffect(() => {
-    let oldList = servicios?.map(servicio => {
-      return {
-        id: servicio.id,
-        id_proveedor: conectado.usuario_id,
-        area_servicio: servicio.area_servicio,
-        servicio_especifico: servicio.servicio_especifico,
-        descripcion: servicio.descripcion,
-        precio: servicio.precio,
-        titulo: servicio.titulo,
-      };
-    });
-    if (searchText !== "") {
-      let newList: servicioInterface[] | undefined = [];
-      newList = oldList?.filter(servicio =>
-        servicio.area_servicio.toUpperCase().includes(searchText.toUpperCase()) || servicio.servicio_especifico.toUpperCase().includes(searchText.toUpperCase())
-        || servicio.titulo.toUpperCase().includes(searchText.toUpperCase()));
-      setFilterDisplay(newList);
-      console.log(newList);
+    if (servicios !== undefined && servicios?.length > 0) {
+      let oldList = servicios?.map(servicio => {
+        return {
+          id: servicio.id,
+          id_proveedor: conectado.usuario_id,
+          area_servicio: servicio.area_servicio,
+          servicio_especifico: servicio.servicio_especifico,
+          descripcion: servicio.descripcion,
+          precio: servicio.precio,
+          titulo: servicio.titulo,
+        };
+      });
+      if (searchText !== "") {
+        let newList: servicioInterface[] | undefined = [];
+        newList = oldList?.filter(servicio =>
+          servicio.area_servicio.toUpperCase().includes(searchText.toUpperCase()) || servicio.servicio_especifico.toUpperCase().includes(searchText.toUpperCase())
+          || servicio.titulo.toUpperCase().includes(searchText.toUpperCase()));
+        setFilterDisplay(newList);
+        console.log(newList);
 
-    } else {
-      setFilterDisplay(servicios);
+      } else {
+        setFilterDisplay(servicios);
+      }
     }
 
-  }, [servicios, searchText]);
-
+  }, [servicios, searchText, count]);
 
 
   useEffect(() => {
     const bearer_token = conectado.token;
-    const url = "http://localhost:8080/api/servicios/" + conectado.usuario_id;
+    const url = "http://localhost:8080/api/servicio/" + conectado.usuario_id;
     const requestOptions = {
       method: "GET",
       headers: {
@@ -79,10 +80,14 @@ const Servicios: React.FC = () => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((res) => {
-        setServicios(res);
-        console.log(res);
+        if (res.error_mensaje) {
+        } else {
+          setServicios(res);
+
+        }
+
       })
-  }, []);
+  }, [count]);
 
 
   return (
@@ -95,7 +100,13 @@ const Servicios: React.FC = () => {
           showCancelButton="focus"
         ></IonSearchbar>
 
+        <IonButton expand="block" onClick={() => setCount(count + 1)}>
+          Actualizar Servicios
+          <IonIcon slot="start" icon={reloadOutline} />
+        </IonButton>
+
         <NuevoServicio
+          key={0}
           id_servicio={0}
           id_proveedor={0}
           area_servicio={""}
@@ -107,9 +118,9 @@ const Servicios: React.FC = () => {
         ></NuevoServicio>
 
         {
-          filterDisplay?.map(servicio => (
+          filterDisplay !== undefined && filterDisplay?.length > 0 ? filterDisplay?.map(servicio => (
             <CardServicio
-              key={servicio.id}
+              key={servicio.id + conectado.usuario_id}
               id_servicio={servicio.id}
               id_proveedor={conectado.usuario_id}
               area_servicio={servicio.area_servicio}
@@ -121,7 +132,7 @@ const Servicios: React.FC = () => {
             >
             </CardServicio>
 
-          ))
+          )) : <IonTitle> No hay servicios</IonTitle>
         }
 
 

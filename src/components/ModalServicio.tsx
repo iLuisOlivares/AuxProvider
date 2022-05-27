@@ -2,10 +2,7 @@ import {
   IonAlert,
   IonButton,
   IonCard,
-  IonCardContent,
   IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonInput,
   IonItem,
   IonLabel,
@@ -13,11 +10,10 @@ import {
   IonSelectOption,
   IonTextarea,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { PropsServicio } from "../data/servicios-context";
+import { categorias } from "../data/serviciosData";
 import { getStorageValue } from "../interface/Auth";
-import Servicios from "../pages/PosLogin/Servicios/Servicios";
-import { CardServicio } from "./CardServicio";
 
 interface Mensaje {
   status: string;
@@ -38,8 +34,10 @@ export const ModalServicio: React.FC<PropsServicio> = (
     metodo
   } = props;
   const [uarea_servicio, setArea] = useState<string>(area_servicio);
-  const [uservicio_especifico, setServicio] =
-    useState<string>(servicio_especifico);
+  const [uservicio_especifico, setServicio] = useState<string>(servicio_especifico);
+  const [areaID, setAreaID] = useState<number>(1);
+  const [servicioID, setServicioID] = useState<number>(0);
+
   const [utitulo, setTitulo] = useState<string>(titulo);
   const [udescripcion, setDescripcion] = useState<string>(descripcion);
   const [uprecio, setPrecio] = useState<number>(precio);
@@ -71,6 +69,7 @@ export const ModalServicio: React.FC<PropsServicio> = (
 
     const requestOptions = {
 
+
       method: metodo,
       headers: {
         "Content-Type": "application/json", Authorization: bearer_token,
@@ -80,20 +79,18 @@ export const ModalServicio: React.FC<PropsServicio> = (
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((res) => {
-        console.log(res);
         if (res.error) {
-
           const newMSJ = {
             status: res.error,
-            mensaje: "No registrado",
+            mensaje: "Servicio no Guardado",
           }
           setAlert(newMSJ);
           setShowAlert(true);
         }
         else {
           const newMSJ = {
-            status: "Registrado",
-            mensaje: "Usuario registrado correctamente",
+            status: "Servicio",
+            mensaje: "Servicio guardado correctamente",
           }
 
           setAlert(newMSJ);
@@ -120,8 +117,11 @@ export const ModalServicio: React.FC<PropsServicio> = (
             placeholder="Seleciona el area"
             onIonChange={(e) => setArea(e.detail.value)}
           >
-            <IonSelectOption value="Tecnico">Educacion</IonSelectOption>
-            <IonSelectOption value="Lloralo">Lloralo</IonSelectOption>
+            {
+              categorias.map((categoria, id) => (
+                <IonSelectOption value={categoria.area}>{categoria.area}</IonSelectOption>
+              ))
+            }
           </IonSelect>
         </IonItem>
         <IonItem>
@@ -131,10 +131,12 @@ export const ModalServicio: React.FC<PropsServicio> = (
             placeholder="Seleciona el servicio"
             onIonChange={(e) => setServicio(e.detail.value)}
           >
-            <IonSelectOption value="Educacion">
-              Clases y refuerzo
-            </IonSelectOption>
-            <IonSelectOption value="Lloralo">Lloralo</IonSelectOption>
+            {
+
+              categorias[2].servicios.map((servicio) => (
+                <IonSelectOption value={servicio}>{servicio}</IonSelectOption>
+              ))
+            }
           </IonSelect>
         </IonItem>
         <IonItem>
@@ -155,7 +157,7 @@ export const ModalServicio: React.FC<PropsServicio> = (
         </IonItem>
 
         <IonButton expand="block" onClick={handleClick} color="primary">
-          Agregar Servicio
+          Actualizar Servicio
         </IonButton>
       </IonCardHeader>
       <IonAlert
@@ -165,6 +167,6 @@ export const ModalServicio: React.FC<PropsServicio> = (
         message={AlertMsj?.mensaje}
         buttons={['Aceptar']}
       />
-    </IonCard>
+    </IonCard >
   );
 };

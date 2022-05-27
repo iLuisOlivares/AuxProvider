@@ -1,17 +1,11 @@
 import {
-  IonCol,
   IonContent,
-  IonGrid,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonItemDivider,
-  IonListHeader,
   IonTextarea,
   IonSelect,
   IonSelectOption,
@@ -38,6 +32,7 @@ const Perfil: React.FC = () => {
   const [celular, setCelular] = useState<number>();
   const [foto, setFoto] = useState<string>();
   const [paginaWeb, setPweb] = useState<string>();
+
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [AlertMsj, setAlert] = useState<Mensaje>();
 
@@ -57,7 +52,6 @@ const Perfil: React.FC = () => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((res) => {
-        console.log(res);
         setApellidos(res.apellidos);
         setCelular(res.celular);
         setCiudad(res.ciudad)
@@ -185,7 +179,7 @@ const Perfil: React.FC = () => {
               value={paginaWeb}
               placeholder="Ingresa tu pagina web"
               onIonChange={(e) => setPweb(e.detail.value!)}
-              readonly={true}
+            // readonly={true}
             ></IonInput>
             <IonAlert
               isOpen={showAlert}
@@ -216,10 +210,15 @@ const Perfil: React.FC = () => {
               onIonChange={(e) => setCiudad(e.detail.value)}
             >
               <IonSelectOption value="Bogota">Bogota</IonSelectOption>
+              <IonSelectOption value="Medellin">Medellin</IonSelectOption>
               <IonSelectOption value="Cartagena">Cartagena</IonSelectOption>
+              <IonSelectOption value="Barranquilla">
+                Barranquilla
+              </IonSelectOption>
+              <IonSelectOption value="Sincelejo">Sincelejo</IonSelectOption>
             </IonSelect>
           </IonItem>
-          <IonItemDivider color="primary">
+          <IonItemDivider color="light">
           </IonItemDivider>
           <IonButton onClick={handleClick} size="small" expand="block" slot="end">
             Guardar

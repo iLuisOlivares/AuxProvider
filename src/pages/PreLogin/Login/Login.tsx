@@ -1,12 +1,8 @@
-import { Link, Redirect, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
-  IonButton,
   IonCol,
   IonContent,
   IonGrid,
-  IonInput,
-  IonItem,
-  IonLabel,
   IonPage,
   IonRow,
   IonText,
@@ -18,25 +14,7 @@ import Header from "../../../components/Header";
 
 import "./stylelogin.css";
 
-interface Props {
-  title: string;
-}
 
-const URL_LOGIN = "https://api-rest-aux.herokuapp.com/login_usuarios.php";
-
-const enviarData = async (url: string, data: object) => {
-  const resp = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
-  const json = await resp.json();
-  console.log(json);
-  return json.conectado;
-};
 
 interface PropsLogin {
   setStorage: (estado: auth) => void;

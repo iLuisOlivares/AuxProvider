@@ -33,7 +33,6 @@ const App: React.FC = () => {
     // getting stored value
     const saved = localStorage.getItem(key);
     const initial = saved != null ? JSON.parse(saved) : defaultValue;
-    console.log(initial);
     return initial;
   }
 

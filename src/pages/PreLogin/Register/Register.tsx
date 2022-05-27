@@ -1,42 +1,24 @@
-import { Link, Redirect, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
-  IonApp,
-  IonAvatar,
-  IonButton,
   IonCol,
   IonContent,
   IonGrid,
-  IonHeader,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonMenu,
   IonPage,
-  IonRouterOutlet,
   IonRow,
-  IonSelect,
-  IonSelectOption,
   IonText,
-  IonTextarea,
-  IonTitle,
-  IonToolbar,
-  setupIonicReact,
 } from "@ionic/react";
-import React, { useState } from "react";
-import { IonReactRouter } from "@ionic/react-router";
-import { repeat } from "ionicons/icons";
+import React from "react";
 import { FormRegister } from "./FormRegister";
-import Header from "../../../components/Header";
+import HeaderPre from "../../../components/HeaderPre";
 
 export const Register: React.FC = () => {
 
   return (
     <IonPage>
-      <Header
-        titulo="Registro de proveedor"></Header>
+      <HeaderPre
+        titulo="Registro de proveedor"></HeaderPre>
       <IonContent>
+
         <FormRegister></FormRegister>
         <IonGrid>
           <IonRow>

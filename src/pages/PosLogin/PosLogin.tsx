@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonAvatar,
@@ -13,7 +13,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { closeCircleOutline, homeOutline, logOutOutline } from "ionicons/icons";
+import { homeOutline, logOutOutline } from "ionicons/icons";
 import { personOutline } from "ionicons/icons";
 import { constructOutline } from "ionicons/icons";
 import { helpBuoyOutline } from "ionicons/icons";
@@ -33,10 +33,8 @@ export const PosLogin: React.FC<PropsPosLogin> = (props: PropsPosLogin) => {
   });
 
   function getStorageValue(key: string, defaultValue: auth) {
-    // getting stored value
     const saved = localStorage.getItem(key);
     const initial = saved != null ? JSON.parse(saved) : defaultValue;
-    console.log(initial);
     return initial;
   }
 
@@ -48,7 +46,6 @@ export const PosLogin: React.FC<PropsPosLogin> = (props: PropsPosLogin) => {
       <IonMenu side="start" contentId="ProviderAppM2">
         <IonHeader>
           <IonToolbar color="light">
-            {/* <IonTitle>Menu</IonTitle> */}
             <IonItem routerLink="/Perfil">
               <IonAvatar slot="start">
                 <img
@@ -56,7 +53,7 @@ export const PosLogin: React.FC<PropsPosLogin> = (props: PropsPosLogin) => {
                   src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
                 />
               </IonAvatar>
-              <IonLabel>{conectado.usuario_id}</IonLabel>
+              <IonLabel>{conectado.usuario_email}</IonLabel>
             </IonItem>
           </IonToolbar>
         </IonHeader>

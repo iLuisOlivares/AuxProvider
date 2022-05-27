@@ -1,17 +1,13 @@
-import { Link, Redirect, Route } from "react-router-dom";
 import {
     IonAlert,
     IonButton,
-    IonContent,
     IonInput,
     IonItem,
     IonLabel,
-    IonPage,
     IonText,
 } from "@ionic/react";
 import React, { useState } from "react";
 import { auth } from "../../../interface/Auth";
-import { stringify } from 'querystring';
 
 interface PropsLogin {
     setStorage: (estado: auth) => void;
@@ -21,7 +17,6 @@ interface Mensaje {
     status: string;
     mensaje: string
 }
-
 
 
 export const FormLogin: React.FC<PropsLogin> = (props: PropsLogin) => {
@@ -89,7 +84,6 @@ export const FormLogin: React.FC<PropsLogin> = (props: PropsLogin) => {
             setShowAlert(true);
         }
     }
-
 
 
     return (
