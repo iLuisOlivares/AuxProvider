@@ -153,7 +153,7 @@ export const CardServicio: React.FC<PropsServicio> = (props: PropsServicio) => {
           area_servicio={area_servicio}
           servicio_especifico={servicio_especifico}
           descripcion={descripcion}
-          precio={precio}
+          precio={0}
           titulo={titulo}
           metodo={metodo}
         ></ModalServicio>

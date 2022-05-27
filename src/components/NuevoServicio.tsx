@@ -39,10 +39,9 @@ export const NuevoServicio: React.FC<PropsServicio> = (
           <ModalServicio
             id_servicio={id_servicio}
             id_proveedor={id_proveedor}
-            area_servicio={area_servicio}
-            servicio_especifico={servicio_especifico}
+            area_servicio={"Reparaciones"}
+            servicio_especifico={"Computadores"}
             descripcion={descripcion}
-            precio={precio}
             titulo={titulo}
             metodo={metodo}
           ></ModalServicio>

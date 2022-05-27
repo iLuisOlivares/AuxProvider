@@ -39,7 +39,7 @@ export interface PropsServicio {
   area_servicio: string;
   servicio_especifico: string;
   descripcion: string;
-  precio: number;
+  precio?: number;
   metodo: string;
 
 }

@@ -12,7 +12,7 @@ import {
 } from "@ionic/react";
 import React, { useState } from "react";
 import { PropsServicio } from "../data/servicios-context";
-import { categorias } from "../data/serviciosData";
+import { categorias, serviciosLista } from "../data/serviciosData";
 import { getStorageValue } from "../interface/Auth";
 
 interface Mensaje {
@@ -40,7 +40,7 @@ export const ModalServicio: React.FC<PropsServicio> = (
 
   const [utitulo, setTitulo] = useState<string>(titulo);
   const [udescripcion, setDescripcion] = useState<string>(descripcion);
-  const [uprecio, setPrecio] = useState<number>(precio);
+  const [uprecio, setPrecio] = useState<number | undefined>(precio);
   const [uid, setid] = useState<number>(id_servicio);
 
 
@@ -52,7 +52,8 @@ export const ModalServicio: React.FC<PropsServicio> = (
   });
 
 
-  const handleClick = () => {
+  const handleClick = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     const data = {
       id: id_servicio,
       area_servicio: uarea_servicio,
@@ -102,63 +103,69 @@ export const ModalServicio: React.FC<PropsServicio> = (
   return (
     <IonCard>
       <IonCardHeader>
-        <IonItem>
-          <IonInput
-            placeholder="Ingresar titulo"
-            value={utitulo}
-            onIonChange={(e) => setTitulo(e.detail.value!)}
-            required
-          ></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonLabel>Area</IonLabel>
-          <IonSelect
-            value={uarea_servicio}
-            placeholder="Seleciona el area"
-            onIonChange={(e) => setArea(e.detail.value)}
-          >
-            {
-              categorias.map((categoria, id) => (
-                <IonSelectOption value={categoria.area}>{categoria.area}</IonSelectOption>
-              ))
-            }
-          </IonSelect>
-        </IonItem>
-        <IonItem>
-          <IonLabel>Servicio</IonLabel>
-          <IonSelect
-            value={uservicio_especifico}
-            placeholder="Seleciona el servicio"
-            onIonChange={(e) => setServicio(e.detail.value)}
-          >
-            {
+        <form onSubmit={handleClick}>
+          <IonItem>
+            <IonInput
+              placeholder="Ingresar titulo"
+              value={utitulo}
+              onIonChange={(e) => setTitulo(e.detail.value!)}
+              required
+            ></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Area</IonLabel>
+            <IonSelect
+              value={uarea_servicio}
+              placeholder="Seleciona el area"
+              onIonChange={(e) => setArea(e.detail.value)}
+            >
+              {
+                categorias.map((categoria, id) => (
+                  <IonSelectOption value={categoria.area}>{categoria.area}</IonSelectOption>
+                ))
+              }
+            </IonSelect>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Servicio</IonLabel>
+            <IonSelect
+              value={uservicio_especifico}
+              placeholder="Seleciona el servicio"
+              onIonChange={(e) => setServicio(e.detail.value)}
+            >
+              {
 
-              categorias[2].servicios.map((servicio) => (
-                <IonSelectOption value={servicio}>{servicio}</IonSelectOption>
-              ))
-            }
-          </IonSelect>
-        </IonItem>
-        <IonItem>
-          <IonInput
-            value={uprecio}
-            type="number"
-            placeholder="Ingrese el precio"
-            color="dark"
-            onIonChange={(e) => setPrecio(parseInt(e.detail.value!, 10))}
-          ></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonTextarea
-            value={udescripcion}
-            placeholder="Ingrese la descripcion"
-            onIonChange={(e) => setDescripcion(e.detail.value!)}
-          ></IonTextarea>
-        </IonItem>
+                serviciosLista.map((categoria, id) => (
+                  <IonSelectOption value={categoria}>{categoria}</IonSelectOption>
+                ))
+              }
+            </IonSelect>
+          </IonItem>
+          <IonItem>
+            <IonInput
+              required
+              value={uprecio}
+              type="number"
+              placeholder="Ingrese el precio"
+              color="dark"
+              onIonChange={(e) => setPrecio(parseInt(e.detail.value!, 10))}
+            ></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonTextarea
+              required
+              value={udescripcion}
+              placeholder="Ingrese la descripcion"
+              onIonChange={(e) => setDescripcion(e.detail.value!)}
+            ></IonTextarea>
+          </IonItem>
 
-        <IonButton expand="block" onClick={handleClick} color="primary">
-          Actualizar Servicio
-        </IonButton>
+          <IonButton expand="block" type="submit" color="primary">
+            Actualizar Servicio
+          </IonButton>
+
+        </form>
+
       </IonCardHeader>
       <IonAlert
         isOpen={showAlert}
